@@ -1,5 +1,7 @@
 //Premitive data types: string, number, boolean
 let myName: string = "Bob";
+const name1 = "Bob"; // name1 is now type of "Bob", but not the generic string
+//let name2: "Bob" = "Bob" //same as the above here name2 is of type "Bob"
 let numberOfWheels: number = 4;
 let isStudent: boolean = true;
 let ages: number[] = [12, 25, 36, 54];
