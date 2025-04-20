@@ -1,5 +1,6 @@
 //custom type of Pizza
 type Pizza = {
+    id: number
     name: string
     price: number
 };
@@ -8,14 +9,14 @@ type Pizza = {
 type Order = {
     orderId : number;
     pizza: Pizza;
-    status: string;
+    status: "ordered" | "completed";
 }
 
-const menu = [
-    { name : "Margherita", price : 200},
-    { name : "Pepperoni", price : 250},
-    { name : "Corn", price : 300},
-    { name : "Chicken", price : 400}
+const menu: Pizza[] = [
+    { id: 1, name : "Margherita", price : 200},
+    { id: 2, name : "Pepperoni", price : 250},
+    { id: 3, name : "Corn", price : 300},
+    { id: 4, name : "Chicken", price : 400}
 ];
 
 let cashInRegister: number = 1000;
@@ -49,7 +50,7 @@ function placeOrder(pizzaName: string){
         return;
     }
     cashInRegister += selectedPizza.price;
-    const newOrder = { orderId : nextOrderId++, pizza : selectedPizza, status : "Ordered"};
+    const newOrder: Order = { orderId : nextOrderId++, pizza : selectedPizza, status : "ordered"};
     orderHistory.push(newOrder);
     return newOrder;
 }
@@ -61,19 +62,26 @@ function placeOrder(pizzaName: string){
  * 2. return the found order from the function
  */
 
-function completeOrder(orderId : number){
+function completeOrder(orderId : number): Order{
     const order = orderHistory.find(orderObj => orderObj.orderId === orderId);
     if(!order){
-        console.error(`order with id : ${orderId} is not found!`);
-        return;
+        throw new Error(`order with id : ${orderId} is not found!`);
     }
-    order.status = "Completed";
+    order.status = "completed";
     return order;
 }
 
+function getPizzaDetails(choiceOfPizza: string | number){
+    if(typeof choiceOfPizza === "string"){
+        const pizzaDetails = menu.find(pizza => pizza.name.toLowerCase() === choiceOfPizza.toLowerCase());
+    } else {
+        const pizzaDetails = menu.find(pizza => pizza.id === choiceOfPizza);
+    }
+}
+
 console.log("Adding couple of new pizzas to the menu")
-addNewPizza({ name : "Tandori Chicken", price : 450});
-addNewPizza({ name : "Spicy Chicken", price : 400});
+addNewPizza({ id: 5, name : "Tandori Chicken", price : 450});
+addNewPizza({ id: 6, name : "Spicy Chicken", price : 400});
 console.log(menu);
 console.log("Please select the pizzas from the menu : ")
 placeOrder("Tandori Chicken");

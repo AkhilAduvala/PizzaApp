@@ -6,7 +6,7 @@ const menu = [
     { name: "Chicken", price: 400 }
 ];
 let cashInRegister = 1000;
-const orderQueue = [];
+const orderHistory = [];
 let nextOrderId = 1;
 /**
  * addNewPizza()
@@ -31,8 +31,8 @@ function placeOrder(pizzaName) {
         return;
     }
     cashInRegister += selectedPizza.price;
-    const newOrder = { orderId: nextOrderId++, pizza: selectedPizza, status: "Ordered" };
-    orderQueue.push(newOrder);
+    const newOrder = { orderId: nextOrderId++, pizza: selectedPizza, status: "ordered" };
+    orderHistory.push(newOrder);
     return newOrder;
 }
 /**
@@ -42,12 +42,12 @@ function placeOrder(pizzaName) {
  * 2. return the found order from the function
  */
 function completeOrder(orderId) {
-    const order = orderQueue.find(orderObj => orderObj.orderId === orderId);
+    const order = orderHistory.find(orderObj => orderObj.orderId === orderId);
     if (!order) {
         console.error(`order with id : ${orderId} is not found!`);
         return;
     }
-    order.status = "Completed";
+    order.status = "completed";
     return order;
 }
 console.log("Adding couple of new pizzas to the menu");
@@ -57,8 +57,8 @@ console.log(menu);
 console.log("Please select the pizzas from the menu : ");
 placeOrder("Tandori Chicken");
 console.log("Your order placed, here is the order queue");
-console.log(orderQueue);
+console.log(orderHistory);
 completeOrder(1);
 console.log("your order is ready, please pay the bill and collet your order");
 console.log(`cash in register :  ${cashInRegister}`);
-console.log(orderQueue);
+console.log(orderHistory);

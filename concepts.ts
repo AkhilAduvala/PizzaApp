@@ -51,4 +51,20 @@ let persons: Person[] = [person1, person2];
 // same as above one
 // let persons: Array<Person> = [person1, person2];
 
-console.log(`Here are the student details: ${person1.name} & ${person2.name}`)
+console.log(`Here are the student details: ${person1.name} & ${person2.name}`);
+
+//literals + unions |
+
+//kind of enum
+type UserRole = "guest" | "member" | "admin" //the UserRole can either of the type guest | member | admin
+let userRole: UserRole = "admin";
+
+type User = {
+    userName: string
+    role: "seller" | "Customer"
+}
+
+let user1: User = {
+    userName: "Akhil",
+    role: "Customer" //if we use other than mentioned it will give error
+}
