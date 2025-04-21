@@ -1,19 +1,24 @@
 "use strict";
-const menu = [
-    { name: "Margherita", price: 200 },
-    { name: "Pepperoni", price: 250 },
-    { name: "Corn", price: 300 },
-    { name: "Chicken", price: 400 }
-];
 let cashInRegister = 1000;
-const orderHistory = [];
 let nextOrderId = 1;
+let itemId = 1;
+const menu = [
+    { id: itemId++, name: "Margherita", price: 200 },
+    { id: itemId++, name: "Pepperoni", price: 250 },
+    { id: itemId++, name: "Corn", price: 300 },
+    { id: itemId++, name: "Chicken", price: 400 }
+];
+const orderHistory = [];
 /**
  * addNewPizza()
  * Utility method that takes a pizza object and adds to menu
  * */
 function addNewPizza(pizzaObject) {
-    menu.push(pizzaObject);
+    const pizza = {
+        id: itemId++,
+        ...pizzaObject
+    };
+    menu.push(pizza);
 }
 /**
  * placeOrder()
@@ -27,14 +32,22 @@ function addNewPizza(pizzaObject) {
 function placeOrder(pizzaName) {
     const selectedPizza = menu.find(pizzaObj => pizzaObj.name === pizzaName);
     if (!selectedPizza) {
-        console.error(`${pizzaName}, does not exist in the menu`);
-        return;
+        throw new Error(`${pizzaName}, does not exist in the menu`);
     }
     cashInRegister += selectedPizza.price;
     const newOrder = { orderId: nextOrderId++, pizza: selectedPizza, status: "ordered" };
     orderHistory.push(newOrder);
     return newOrder;
 }
+/**
+ *
+ * using the generic to add object to array
+ */
+function addToArray(array, item) {
+    array.push(item);
+}
+addToArray(menu, { id: itemId++, name: "Mixed", price: 500 });
+addToArray(orderHistory, { orderId: nextOrderId++, pizza: menu[3], status: "ordered" });
 /**
  * completeOrder()
  * Utility method that takes orderID as a parameter
@@ -44,11 +57,26 @@ function placeOrder(pizzaName) {
 function completeOrder(orderId) {
     const order = orderHistory.find(orderObj => orderObj.orderId === orderId);
     if (!order) {
-        console.error(`order with id : ${orderId} is not found!`);
-        return;
+        throw new Error(`order with id : ${orderId} is not found!`);
     }
     order.status = "completed";
     return order;
+}
+function getPizzaDetails(choiceOfPizza) {
+    let pizza;
+    if (typeof choiceOfPizza === "string") {
+        pizza = menu.find(pizza => pizza.name.toLowerCase() === choiceOfPizza.toLowerCase());
+    }
+    else if (typeof choiceOfPizza === "number") {
+        pizza = menu.find(pizza => pizza.id === choiceOfPizza);
+    }
+    else {
+        throw new TypeError("Please select pizza based on Id or Name");
+    }
+    if (!pizza) {
+        throw new Error("Please select pizza from meny, the current one is not available");
+    }
+    return pizza;
 }
 console.log("Adding couple of new pizzas to the menu");
 addNewPizza({ name: "Tandori Chicken", price: 450 });
